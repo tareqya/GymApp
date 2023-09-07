@@ -6,6 +6,8 @@ import TimePicker from "./TimePicker";
 import MeetingCard from "./MeetingCard";
 import MeetingRequestCard from "./MeetingRequestCard";
 import EmptyCard from "./EmptyCard";
+import Dialog from "./Dialog";
+
 export {
   BackButtonContainer,
   Container,
@@ -15,4 +17,5 @@ export {
   MeetingCard,
   MeetingRequestCard,
   EmptyCard,
+  Dialog,
 };

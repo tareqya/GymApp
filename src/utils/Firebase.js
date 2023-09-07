@@ -23,6 +23,7 @@ import {
   ref as storageRef,
   getDownloadURL,
   uploadBytes,
+  deleteObject,
 } from "firebase/storage";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -302,6 +303,20 @@ const UploadImageToMeeting = async ({ prevImages, imagePath, meetingKey }) => {
   }
 };
 
+const RemoveImageFromMeeting = async ({ images, imageStore, meetingKey }) => {
+  try {
+    await update(databaseRef(database, `${MEETING_TABLE}/${meetingKey}`), {
+      attachedImages: [...images],
+    });
+    const storageImagePath = storageRef(storage, imageStore);
+    await deleteObject(storageImagePath);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
 export {
   UploadImage,
   LoginUser,
@@ -316,4 +331,5 @@ export {
   UpdateSubscription,
   FetchMeeting,
   UploadImageToMeeting,
+  RemoveImageFromMeeting,
 };

@@ -1,10 +1,24 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { ActivityIndicator } from "react-native-paper";
 import * as Linking from "expo-linking";
 import * as ImagePicker from "expo-image-picker";
 
-import { BackButtonContainer, EmptyCard, TextButton } from "../../components";
+import {
+  BackButtonContainer,
+  Dialog,
+  EmptyCard,
+  TextButton,
+} from "../../components";
 import {
   COLORS,
   FONTS,
@@ -15,6 +29,7 @@ import {
 } from "../../../assets/styles";
 import {
   FetchClientMeeting,
+  RemoveMeetingImage,
   UploadClientMeetingImage,
 } from "../../utils/ClientControler";
 
@@ -23,6 +38,8 @@ const BookingDetailsScreen = ({ navigation, route }) => {
   const [meeting, setMeeting] = React.useState(null);
   const [fetching, setFetching] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
+  const [visible, setVisible] = React.useState(false);
+  const [selectedImage, setSelectedImage] = React.useState(null);
 
   React.useEffect(() => {
     FetchClientMeeting(meetingKey)
@@ -69,8 +86,49 @@ const BookingDetailsScreen = ({ navigation, route }) => {
     }
   };
 
+  const handleRemoveImagePress = (image) => {
+    Alert.alert("Remove Image", "Are you sure you want to remove this image?", [
+      { onPress: () => RemoveImage(image), text: "Yes" },
+      { onPress: () => {}, text: "No" },
+    ]);
+  };
+
+  const RemoveImage = async (image) => {
+    setLoading(true);
+    const _attachedImages = meeting.attachedImages.filter(
+      (item) => item.uploadTime !== image.uploadTime
+    );
+    setMeeting({
+      ...meeting,
+      attachedImages: _attachedImages,
+    });
+    const res = await RemoveMeetingImage(
+      _attachedImages,
+      image.imageStore,
+      meetingKey
+    );
+    if (!res) {
+      alert("Failed to remove image");
+    } else {
+      alert("Successfully removed image");
+    }
+    setLoading(false);
+  };
+
   return (
     <BackButtonContainer onBackBtnPress={navigation.goBack}>
+      <Dialog visible={visible} onDismiss={() => setVisible(false)}>
+        <ImageBackground
+          source={{ uri: selectedImage?.imageUrl }}
+          resizeMode="contain"
+          style={styles.bigImageWrapper}
+        >
+          <Pressable
+            style={{ height: "100%" }}
+            onPress={() => setVisible(false)}
+          />
+        </ImageBackground>
+      </Dialog>
       <View style={styles.container}>
         {fetching && (
           <ActivityIndicator size={"large"} color={COLORS.primary} />
@@ -126,18 +184,24 @@ const BookingDetailsScreen = ({ navigation, route }) => {
                   Attached Photos
                 </Text>
                 <View style={styles.imagesWrapper}>
-                  {meeting.attachedImages.map((image, index) => (
-                    <View key={index.toString()} style={{ marginBottom: 20 }}>
+                  {meeting.attachedImages.map((image) => (
+                    <View
+                      key={image.uploadTime.toString()}
+                      style={{ marginBottom: 20 }}
+                    >
                       <TouchableOpacity
                         activeOpacity={0.7}
                         style={styles.removeImageBtn}
-                        onPress={() => console.log("remove")}
+                        onPress={() => handleRemoveImagePress(image)}
                       >
                         <Icons.MinusIcon color={COLORS.white} size={20} />
                       </TouchableOpacity>
                       <TouchableOpacity
                         activeOpacity={0.7}
-                        onPress={() => console.log("show")}
+                        onPress={() => {
+                          setSelectedImage(image);
+                          setVisible(true);
+                        }}
                       >
                         <Image
                           key={image.id}
@@ -206,5 +270,11 @@ const styles = StyleSheet.create({
     zIndex: 99,
     top: -10,
     right: -10,
+  },
+  bigImageWrapper: {
+    flex: 1,
+    marginHorizontal: 20,
+    borderRadius: 10,
+    padding: 10,
   },
 });

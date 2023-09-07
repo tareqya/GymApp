@@ -6,6 +6,7 @@ import {
   UpdateSubscription,
   FetchMeeting,
   UploadImageToMeeting,
+  RemoveImageFromMeeting,
 } from "./Firebase";
 
 const FetchWorkers = async () => {
@@ -75,6 +76,15 @@ const UploadClientMeetingImage = async (prevImages, imagePath, meetingKey) => {
   }
 };
 
+const RemoveMeetingImage = async (images, imageStore, meetingKey) => {
+  try {
+    return await RemoveImageFromMeeting({ images, imageStore, meetingKey });
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
 export {
   FetchWorkers,
   BookMeeting,
@@ -82,4 +92,5 @@ export {
   FetchClientMeeting,
   UpdateClientSubscription,
   UploadClientMeetingImage,
+  RemoveMeetingImage,
 };
