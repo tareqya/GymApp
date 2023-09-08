@@ -41,6 +41,8 @@ const firebaseConfig = {
 
 const USER_TABLE = "Users";
 const MEETING_TABLE = "Meetings";
+const PRODUCT_TABLE = "Products";
+const ORDER_TABLE = "Orders";
 
 let app = undefined;
 let auth = undefined;
@@ -317,6 +319,91 @@ const RemoveImageFromMeeting = async ({ images, imageStore, meetingKey }) => {
   }
 };
 
+const FetchProducts = async () => {
+  try {
+    const snapshot = await get(databaseRef(database, PRODUCT_TABLE));
+    if (!snapshot.exists()) {
+      throw "There is no products are available!";
+    }
+    const products = [];
+    const _products = snapshot.val();
+    for (let key in _products) {
+      _products[key].imageUrl = await FetchImageUrl({
+        imagePath: _products[key].imageStore,
+      });
+      _products[key].key = key;
+      products.push(_products[key]);
+    }
+
+    return products;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+const FetchProductById = async ({ productId }) => {
+  try {
+    const productRef = databaseRef(database, `${PRODUCT_TABLE}/${productId}`);
+    const snapshot = await get(productRef);
+    if (!snapshot.exists()) {
+      throw "Product does not exist!";
+    }
+    const product = snapshot.val();
+    product.imageUrl = await FetchImageUrl({ imagePath: product.imageStore });
+    return product;
+  } catch (err) {
+    console.log(err);
+    return undefined;
+  }
+};
+
+const CreateOrder = async ({ order }) => {
+  try {
+    await push(databaseRef(database, ORDER_TABLE), order);
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+const UpdateProductQuantity = async ({ productKey, quantity }) => {
+  try {
+    const productRef = databaseRef(database, `${PRODUCT_TABLE}/${productKey}`);
+    await update(productRef, { quantity });
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+const FetchOrdersByUid = async ({ clientUid }) => {
+  try {
+    const orderRef = databaseRef(database, `${ORDER_TABLE}`);
+    const _query = query(
+      orderRef,
+      orderByChild("clientUid"),
+      equalTo(clientUid)
+    );
+
+    const snapshot = await get(_query);
+    if (!snapshot.exists()) {
+      throw "There is no orders are available!";
+    }
+    const orders = [];
+    const _orders = snapshot.val();
+    for (let key in _orders) {
+      orders.push({ ..._orders[key], key });
+    }
+    return orders.sort((a, b) => b.orderTime - a.orderTime);
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
 export {
   UploadImage,
   LoginUser,
@@ -332,4 +419,9 @@ export {
   FetchMeeting,
   UploadImageToMeeting,
   RemoveImageFromMeeting,
+  FetchProducts,
+  CreateOrder,
+  UpdateProductQuantity,
+  FetchProductById,
+  FetchOrdersByUid,
 };

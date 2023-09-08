@@ -6,6 +6,8 @@ import MyBookingScreen from "./MyBookingScreen";
 import EditAccountScreen from "./EditAccountScreen";
 import MembershipScreen from "./MembershipScreen";
 import BookingDetailsScreen from "./BookingDetailsScreen";
+import ProductStoreScreen from "./ProductStoreScreen";
+import OrdersScreen from "./OrdersScreen";
 export {
   HomeScreen,
   ProfileScreen,
@@ -15,4 +17,6 @@ export {
   MyBookingScreen,
   MembershipScreen,
   BookingDetailsScreen,
+  ProductStoreScreen,
+  OrdersScreen,
 };

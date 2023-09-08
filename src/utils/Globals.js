@@ -1,4 +1,13 @@
+import { Images } from "../../assets/styles";
+
 const USER_KEY = "user";
+
+const ORDER_STATUS = {
+  shipped: "Shipped",
+  delivered: "Delivered",
+  cancelled: "Cancelled",
+  pending: "Pending",
+};
 
 const USER_TYPES = {
   admin: "admin",
@@ -48,6 +57,16 @@ const GYM_NAME = "Great Shape Gym";
 const GYM_LOCATION = "Bar Yehuda Road 113, Nesher";
 const WORK_TIMES = "09:00 AM - 23:00 PM";
 
+const CATEGORIES = [
+  { label: "Protein", value: "Protein", image: Images.PROTEIN_IMAGE },
+  {
+    label: "Healthy meals",
+    value: "Healthy meals",
+    image: Images.HEALTHY_IMAGE,
+  },
+  { label: "Vitamin", value: "Vitamin", image: Images.VITAMIN_IMAGE },
+];
+
 export {
   USER_KEY,
   USER_TYPES,
@@ -57,4 +76,6 @@ export {
   MONTHS,
   HOURS,
   MEETING_STATUS,
+  CATEGORIES,
+  ORDER_STATUS,
 };

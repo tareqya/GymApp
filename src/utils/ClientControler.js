@@ -7,7 +7,13 @@ import {
   FetchMeeting,
   UploadImageToMeeting,
   RemoveImageFromMeeting,
+  FetchProducts,
+  CreateOrder,
+  UpdateProductQuantity,
+  FetchOrdersByUid,
+  FetchProductById,
 } from "./Firebase";
+import { ORDER_STATUS } from "./Globals";
 
 const FetchWorkers = async () => {
   try {
@@ -85,6 +91,69 @@ const RemoveMeetingImage = async (images, imageStore, meetingKey) => {
   }
 };
 
+const FetchStoreProducts = async () => {
+  try {
+    const products = await FetchProducts();
+    return products;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+const CreateClientOrder = async (uid, address, product, quantity) => {
+  try {
+    // Get the current date
+    const currentDate = new Date();
+    // Add 15 days to the current date
+    currentDate.setDate(currentDate.getDate() + 15);
+
+    const order = {
+      clientUid: uid,
+      address: address,
+      productId: product.key,
+      quantity: quantity || 1,
+      status: ORDER_STATUS.pending,
+      orderTime: new Date().getTime(),
+      deliveryTime: currentDate.getTime(),
+      totalPrice: product.price * quantity,
+    };
+
+    const result = await CreateOrder({ order });
+
+    return (
+      result &&
+      (await UpdateProductQuantity({
+        productKey: product.key,
+        quantity: product.quantity - (quantity || 1),
+      }))
+    );
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+const FetchClientOrders = async (uid) => {
+  try {
+    const orders = await FetchOrdersByUid({ clientUid: uid });
+    for (let i = 0; i < orders.length; i++) {
+      const product = await FetchProductById({
+        productId: orders[i].productId,
+      });
+      if (product) {
+        orders[i].product = product;
+      } else {
+        throw new Error("Product not found");
+      }
+    }
+    return orders;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
 export {
   FetchWorkers,
   BookMeeting,
@@ -93,4 +162,7 @@ export {
   UpdateClientSubscription,
   UploadClientMeetingImage,
   RemoveMeetingImage,
+  FetchStoreProducts,
+  CreateClientOrder,
+  FetchClientOrders,
 };

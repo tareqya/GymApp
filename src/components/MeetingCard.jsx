@@ -31,36 +31,55 @@ const MeetingCard = ({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      style={[styles.container, style]}
+      style={[
+        {
+          backgroundColor: "#fff",
+          borderRadius: 10,
+          padding: 10,
+          ...STYLES.shadow,
+        },
+        style,
+      ]}
     >
-      <View style={{ flexDirection: "row", gap: 10 }}>
-        <Image
-          source={imageUrl ? { uri: imageUrl } : Images.PROFILE_IMAGE}
-          style={styles.image}
-          resizeMode="contain"
-        />
-        <View>
-          <Text style={FONTS.caption}>{subject}</Text>
-          <Text style={[FONTS.h2]}>{name}</Text>
-          <View
-            style={[
-              styles.statusWrapper,
-              {
-                backgroundColor: statusColor(),
-              },
-            ]}
-          >
-            <Text style={[FONTS.h4, { color: COLORS.white }]}>{status}</Text>
+      <View style={[styles.container]}>
+        <View style={{ flexDirection: "row", gap: 10 }}>
+          <Image
+            source={imageUrl ? { uri: imageUrl } : Images.PROFILE_IMAGE}
+            style={styles.image}
+            resizeMode="contain"
+          />
+          <View style={{ gap: 5 }}>
+            <Text style={FONTS.caption}>{subject}</Text>
+            <Text style={[FONTS.h3]}>{name}</Text>
+            <View
+              style={[
+                styles.statusWrapper,
+                {
+                  backgroundColor: statusColor(),
+                },
+              ]}
+            >
+              <Text style={[FONTS.h4, { color: COLORS.white }]}>{status}</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={{ gap: 10, alignItems: "center" }}>
+          <View style={styles.arrowWrapper}>
+            <Icons.RightArrowIcon />
           </View>
         </View>
       </View>
-
-      <View style={{ gap: 10, alignItems: "center" }}>
-        <View style={styles.arrowWrapper}>
-          <Icons.RightArrowIcon />
-        </View>
-        <Text style={FONTS.body4}>{formatDateAndTime(date)}</Text>
-        <Text style={FONTS.body4}>{formatTime(date)}</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 5,
+          alignSelf: "flex-end",
+          marginTop: 5,
+        }}
+      >
+        <Text style={FONTS.caption}>{formatDateAndTime(date)}</Text>
+        <Text style={FONTS.caption}>{formatTime(date)}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -74,10 +93,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 10,
-    ...STYLES.shadow,
   },
   image: {
     height: 80,

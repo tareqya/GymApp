@@ -9,6 +9,8 @@ import {
   EditAccountScreen,
   MembershipScreen,
   BookingDetailsScreen,
+  ProductStoreScreen,
+  OrdersScreen,
 } from "../screens/client-screens";
 import { COLORS, Icons } from "../../assets/styles";
 import { View, StyleSheet } from "react-native";
@@ -123,6 +125,8 @@ const ClientNavigation = () => {
         name="BookingDetailsScreen"
         component={BookingDetailsScreen}
       />
+      <Stack.Screen name="ProductStoreScreen" component={ProductStoreScreen} />
+      <Stack.Screen name="OrdersScreen" component={OrdersScreen} />
     </Stack.Navigator>
   );
 };

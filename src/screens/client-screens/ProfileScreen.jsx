@@ -61,7 +61,7 @@ const ProfileScreen = ({ navigation }) => {
           <Divider bold />
           {/* orders  */}
           <TouchableOpacity
-            onPress={() => {}}
+            onPress={() => navigation.navigate("OrdersScreen")}
             activeOpacity={0.7}
             style={styles.buttonWrapper}
           >
