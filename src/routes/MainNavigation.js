@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 
 import AuthNaviation from "./AuthNavigation";
 import AdminNavigation from "./AdminNavigation";
-import TrainerNavigation from "./TrainerNavigation";
+import TrainerNavigation from "./WorkerNavigation";
 import ClientNavigation from "./ClientNavigation";
 
 import { AuthContext, ThemeContext } from "../context";

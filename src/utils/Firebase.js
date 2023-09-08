@@ -27,7 +27,7 @@ import {
 } from "firebase/storage";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { USER_TYPES } from "./Globals";
+import { MEETING_STATUS, USER_TYPES } from "./Globals";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA_X7cykz3ZRbuGdtlSBWoGZaWbW0Afti0",
@@ -404,6 +404,71 @@ const FetchOrdersByUid = async ({ clientUid }) => {
   }
 };
 
+const FetchMeetingRequestsByWorkerId = async ({ workerUid }) => {
+  try {
+    const meetingRef = databaseRef(database, `${MEETING_TABLE}`);
+    const _query = query(
+      meetingRef,
+      orderByChild("workerUid"),
+      equalTo(workerUid)
+    );
+
+    const snapshot = await get(_query);
+    if (!snapshot.exists()) {
+      throw "There is no meetings are available!";
+    }
+    const meetings = [];
+    const _meetings = snapshot.val();
+    for (let key in _meetings) {
+      // TODO: add another check if current time bigger than meeting time
+      if (_meetings[key].status === MEETING_STATUS.pending)
+        meetings.push({ ..._meetings[key], key });
+    }
+
+    return meetings.sort((a, b) => b.meetingTime - a.meetingTime);
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+const FetchMeetingsByWorkerUid = async ({ workerUid }) => {
+  try {
+    const meetingRef = databaseRef(database, `${MEETING_TABLE}`);
+    const _query = query(
+      meetingRef,
+      orderByChild("workerUid"),
+      equalTo(workerUid)
+    );
+
+    const snapshot = await get(_query);
+    if (!snapshot.exists()) {
+      throw "There is no meetings are available!";
+    }
+    const meetings = [];
+    const _meetings = snapshot.val();
+    for (let key in _meetings) {
+      meetings.push({ ..._meetings[key], key });
+    }
+
+    return meetings.sort((a, b) => b.meetingTime - a.meetingTime);
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+const UpdateMeetingStatus = async ({ meetingKey, status }) => {
+  try {
+    const meetingRef = databaseRef(database, `${MEETING_TABLE}/${meetingKey}`);
+    await update(meetingRef, { status: status });
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
 export {
   UploadImage,
   LoginUser,
@@ -424,4 +489,7 @@ export {
   UpdateProductQuantity,
   FetchProductById,
   FetchOrdersByUid,
+  FetchMeetingRequestsByWorkerId,
+  FetchMeetingsByWorkerUid,
+  UpdateMeetingStatus,
 };

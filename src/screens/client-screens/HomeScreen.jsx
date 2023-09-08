@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
+import { Divider } from "react-native-paper";
 
 import { Container } from "../../components";
 import { AuthContext } from "../../context";
 import { COLORS, FONTS, Icons, Images, SIZES } from "../../../assets/styles";
 import { GYM_NAME, GYM_LOCATION, WORK_TIMES } from "../../utils/Globals";
-import { Divider } from "react-native-paper";
 
 const HomeScreen = () => {
   const { user } = React.useContext(AuthContext.Context);
