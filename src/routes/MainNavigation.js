@@ -1,6 +1,8 @@
 import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
+import { ActivityIndicator } from "react-native-paper";
 
 import AuthNaviation from "./AuthNavigation";
 import AdminNavigation from "./AdminNavigation";
@@ -10,6 +12,7 @@ import ClientNavigation from "./ClientNavigation";
 import { AuthContext, ThemeContext } from "../context";
 import { USER_TYPES } from "../utils/Globals";
 import { CurrentUser, SyncUser } from "../utils/AuthControler";
+import { COLORS, FONTS } from "../../assets/styles";
 
 const HomeRouter = ({ currentUser }) => {
   if (currentUser.accountType === USER_TYPES.admin) {
@@ -40,7 +43,13 @@ const MainNavigation = () => {
     SyncData();
   }, []);
 
-  if (loading) return null;
+  if (loading)
+    return (
+      <View style={styles.loadingWrapper}>
+        <ActivityIndicator size={"large"} color={COLORS.primary} />
+        <Text style={FONTS.body2}>Loading...</Text>
+      </View>
+    );
 
   return (
     <>
@@ -53,3 +62,11 @@ const MainNavigation = () => {
 };
 
 export default MainNavigation;
+
+const styles = StyleSheet.create({
+  loadingWrapper: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
