@@ -114,7 +114,13 @@ const PhoneIcon = ({ color = "#FFDD6B", size = 25 }) => (
 const MinusIcon = ({ color = "#FFDD6B", size = 25 }) => (
   <Entypo name="minus" color={color} size={size} />
 );
+
+const PackageIcon = ({ color = "#FFDD6B", size = 25 }) => (
+  <Feather name="package" color={color} size={size} />
+);
+
 export default {
+  PackageIcon,
   MinusIcon,
   PhoneIcon,
   CheckIcon,

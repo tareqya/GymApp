@@ -38,6 +38,7 @@ const TimePicker = ({
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => (
           <TouchableOpacity
+            activeOpacity={0.7}
             style={[
               styles.timeListItemWrapper,
               {

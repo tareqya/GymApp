@@ -13,6 +13,7 @@ const DayItem = ({
 }) => {
   return (
     <TouchableOpacity
+      activeOpacity={0.7}
       style={[
         styles.dayWrapper,
         { backgroundColor: isSelected ? COLORS.primary : COLORS.white },

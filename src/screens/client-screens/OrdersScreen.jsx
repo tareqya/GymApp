@@ -1,10 +1,12 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { BackButtonContainer, EmptyCard } from "../../components";
-import { COLORS, FONTS } from "../../../assets/styles";
+import { BackButtonContainer, EmptyCard, ProgressBar } from "../../components";
+import { COLORS, FONTS, STYLES } from "../../../assets/styles";
 import { AuthContext } from "../../context";
 import { FetchClientOrders } from "../../utils/ClientControler";
 import { ActivityIndicator } from "react-native-paper";
+import { formatDateAndTime } from "../../utils/UtilsFunctions";
+import { ORDER_STATUS } from "../../utils/Globals";
 const OrdersScreen = ({ navigation }) => {
   const { user } = React.useContext(AuthContext.Context);
   const [orders, setOrders] = React.useState([]);
@@ -16,7 +18,22 @@ const OrdersScreen = ({ navigation }) => {
       .catch((err) => alert(err.message))
       .finally(() => setFetching(false));
   }, []);
-  console.log(orders);
+
+  const orderCalPercentage = (order) => {
+    switch (order.status) {
+      case ORDER_STATUS.pending:
+        return 0.1;
+      case ORDER_STATUS.cancelled:
+        return 0;
+      case ORDER_STATUS.shipped:
+        return 0.5;
+      case ORDER_STATUS.delivered:
+        return 1;
+      default:
+        return 0;
+    }
+  };
+
   return (
     <BackButtonContainer onBackBtnPress={navigation.goBack}>
       <View style={styles.container}>
@@ -30,18 +47,45 @@ const OrdersScreen = ({ navigation }) => {
           <EmptyCard msg={"No orders found!"} />
         )}
 
-        {orders.map((order) => (
-          <View key={order.key}>
-            <View>
-              <Image
-                source={{ uri: order.product.imageUrl }}
-                style={styles.orderImage}
-                resizeMode="contain"
+        {orders.map((order) => {
+          const { product } = order;
+          return (
+            <View key={order.key} style={styles.orderWrapper}>
+              <View style={{ flexDirection: "row", gap: 10 }}>
+                <Image
+                  source={{ uri: product.imageUrl }}
+                  style={styles.orderImage}
+                  resizeMode="contain"
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={[FONTS.h2]} numberOfLines={1}>
+                    {product.title}
+                  </Text>
+                  <Text style={[FONTS.body2, { color: COLORS.secondary }]}>
+                    {order.totalPrice} ₪
+                    <Text style={[FONTS.caption]}> x{order.quantity}</Text>
+                  </Text>
+                  <Text style={[FONTS.caption]}>
+                    Delivery Date:{" "}
+                    {formatDateAndTime(new Date(order.deliveryTime))}
+                  </Text>
+                </View>
+              </View>
+
+              <ProgressBar
+                style={{ marginTop: 10 }}
+                persent={orderCalPercentage(order)}
+                title={order.status}
               />
+
+              <Text
+                style={[FONTS.caption, { textAlign: "right", marginTop: 5 }]}
+              >
+                {formatDateAndTime(new Date(order.orderTime))}
+              </Text>
             </View>
-            <View></View>
-          </View>
-        ))}
+          );
+        })}
       </View>
     </BackButtonContainer>
   );
@@ -58,5 +102,13 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 10,
+  },
+  orderWrapper: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 10,
+    ...STYLES.shadow,
   },
 });

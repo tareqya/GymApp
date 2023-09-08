@@ -130,6 +130,7 @@ const BookingScreen = ({ navigation }) => {
         keyExtractor={(item) => item.uid}
         renderItem={({ item }) => (
           <TouchableOpacity
+            activeOpacity={0.7}
             style={[styles.workerWrapper]}
             onPress={() => setSelectedWorker(item)}
           >
