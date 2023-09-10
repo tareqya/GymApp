@@ -1,7 +1,13 @@
 import { View, StyleSheet } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { HomeScreen, ProfileScreen } from "../screens/worker-screens";
+import {
+  HomeScreen,
+  ProfileScreen,
+  MyBookingScreen,
+  BookingDetailsScreen,
+} from "../screens/worker-screens";
+import { EditAccountScreen } from "../screens/common-screens";
 import { COLORS, Icons } from "../../assets/styles";
 const Stack = createNativeStackNavigator();
 const Tabs = createBottomTabNavigator();
@@ -67,6 +73,12 @@ const WorkerNavigation = () => {
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="BottomNavigation" component={BottomNavigation} />
+      <Stack.Screen name="EditAccountScreen" component={EditAccountScreen} />
+      <Stack.Screen name="MyBookingScreen" component={MyBookingScreen} />
+      <Stack.Screen
+        name="BookingDetailsScreen"
+        component={BookingDetailsScreen}
+      />
     </Stack.Navigator>
   );
 };
