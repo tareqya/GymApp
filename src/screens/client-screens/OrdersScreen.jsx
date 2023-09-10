@@ -28,7 +28,7 @@ const OrdersScreen = ({ navigation }) => {
       case ORDER_STATUS.shipped:
         return 0.5;
       case ORDER_STATUS.delivered:
-        return 1;
+        return 0.95;
       default:
         return 0;
     }

@@ -379,6 +379,16 @@ const UpdateProductQuantity = async ({ productKey, quantity }) => {
   }
 };
 
+const UpdateClientScore = async ({ uid, score }) => {
+  try {
+    const userRef = databaseRef(database, `${USER_TABLE}/${uid}`);
+    await update(userRef, { score });
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
 const FetchOrdersByUid = async ({ clientUid }) => {
   try {
     const orderRef = databaseRef(database, `${ORDER_TABLE}`);
@@ -492,4 +502,5 @@ export {
   FetchMeetingRequestsByWorkerId,
   FetchMeetingsByWorkerUid,
   UpdateMeetingStatus,
+  UpdateClientScore,
 };

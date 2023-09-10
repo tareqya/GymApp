@@ -28,7 +28,8 @@ const ProductStoreScreen = ({ navigation, route }) => {
       user.uid,
       user.address || "",
       product,
-      quantity
+      quantity,
+      user.score || 0
     );
     if (!res) {
       alert("Failed to create order");

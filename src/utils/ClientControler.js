@@ -12,6 +12,7 @@ import {
   UpdateProductQuantity,
   FetchOrdersByUid,
   FetchProductById,
+  UpdateClientScore,
 } from "./Firebase";
 import { ORDER_STATUS } from "./Globals";
 
@@ -101,7 +102,7 @@ const FetchStoreProducts = async () => {
   }
 };
 
-const CreateClientOrder = async (uid, address, product, quantity) => {
+const CreateClientOrder = async (uid, address, product, quantity, score) => {
   try {
     // Get the current date
     const currentDate = new Date();
@@ -119,15 +120,19 @@ const CreateClientOrder = async (uid, address, product, quantity) => {
       totalPrice: product.price * quantity,
     };
 
-    const result = await CreateOrder({ order });
+    let result = await CreateOrder({ order });
+    if (!result) throw "Failed to create order!";
 
-    return (
-      result &&
-      (await UpdateProductQuantity({
-        productKey: product.key,
-        quantity: product.quantity - (quantity || 1),
-      }))
-    );
+    result = await UpdateProductQuantity({
+      productKey: product.key,
+      quantity: product.quantity - (quantity || 1),
+    });
+    if (!result) throw "Failed to update quantity!";
+
+    result = await UpdateClientScore({ uid, score: score + 10 });
+    if (!result) throw "Failed to update client score";
+
+    return true;
   } catch (err) {
     console.log(err);
     return false;

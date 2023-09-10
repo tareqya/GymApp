@@ -40,7 +40,7 @@ const ProfileScreen = ({ navigation }) => {
           <Text style={[FONTS.h3]}>
             {user.firstname} {user.lastname}
           </Text>
-          <Text style={[FONTS.caption]}>{user.email}</Text>
+          <Text style={[FONTS.caption]}>{user.score || "0"}</Text>
         </View>
         {/* options wrapper */}
         <View style={{ marginTop: 20 }}>
