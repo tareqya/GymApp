@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { TextInput } from "react-native-paper";
-import { BackButtonContainer, TextButton } from "../../components";
+import { BackButtonContainer, CreditCard, TextButton } from "../../components";
 import { COLORS, FONTS, SIZES, STYLES } from "../../../assets/styles";
 import { CreateClientOrder } from "../../utils/ClientControler";
 import { AuthContext } from "../../context";
@@ -11,6 +11,7 @@ const ProductStoreScreen = ({ navigation, route }) => {
   const { user } = React.useContext(AuthContext.Context);
   const [quantity, setQuantity] = React.useState("1");
   const [loading, setLoading] = React.useState(false);
+  const [cardDetails, setCardDetails] = React.useState({});
 
   const handleOrderPress = async () => {
     if (product.quantity === 0) {
@@ -22,6 +23,11 @@ const ProductStoreScreen = ({ navigation, route }) => {
       return;
     }
     if (loading) return;
+
+    if (!cardDetails.isValid) {
+      alert("Please fill the card details!");
+      return;
+    }
 
     setLoading(true);
     const res = await CreateClientOrder(
@@ -80,6 +86,9 @@ const ProductStoreScreen = ({ navigation, route }) => {
         </View>
       </View>
 
+      {/* Credit Card */}
+      <CreditCard onChange={(cardDetails) => setCardDetails(cardDetails)} />
+      {/* order button */}
       <TextButton
         label="Order Now"
         style={{ margin: 20, marginBottom: 50 }}

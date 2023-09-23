@@ -8,6 +8,7 @@ import MeetingRequestCard from "./MeetingRequestCard";
 import EmptyCard from "./EmptyCard";
 import Dialog from "./Dialog";
 import ProgressBar from "./ProgressBar";
+import CreditCard from "./CreditCard";
 export {
   BackButtonContainer,
   Container,
@@ -19,4 +20,5 @@ export {
   EmptyCard,
   Dialog,
   ProgressBar,
+  CreditCard,
 };
